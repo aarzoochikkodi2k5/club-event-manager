@@ -43,11 +43,6 @@ React (browser)  -->  Express REST API  -->  MongoDB Atlas
 - **Security is enforced on the server.** Role checks and ownership checks (a club can only edit its own events) happen in the API, not just in the UI.
 - **Separate registrations collection.** It links one student to one event and also stores attendance, which keeps attendance and dashboard queries simple.
 
-## Screenshots
-
-![Login](docs/login.png)
-![Browse events](docs/events.png)
-![Admin dashboard](docs/dashboard.png)
 
 ## Run it locally
 
