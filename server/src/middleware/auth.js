@@ -28,3 +28,18 @@ export function studentOnly(req, res, next) {
   if (req.user.role !== 'student') return res.status(403).json({ message: 'Students only' });
   next();
 }
+
+// Like protect, but never blocks: guests simply have no req.user
+export async function optionalAuth(req, res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.split(' ')[1] : null;
+  if (!token) return next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id).select('-password');
+  } catch {
+    // bad or expired token: treat as a guest
+  }
+  
+  next();
+}

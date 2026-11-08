@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import fs from 'fs';
+
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import connectDB from './config/db.js';
@@ -100,7 +100,7 @@ async function seed() {
   );
 
   // 3. Create events, posters and registrations
-  fs.mkdirSync('uploads', { recursive: true });
+  
   for (let i = 0; i < events.length; i++) {
     const e = events[i];
     const admin = adminDocs.find((a) => a.clubName === e.club);
@@ -109,15 +109,15 @@ async function seed() {
       day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC',
     });
 
-    const file = `seed-${i + 1}.svg`;
-    fs.writeFileSync(`uploads/${file}`, posterSvg(e, dateLabel));
-
-    const event = await Event.create({
+    const svg = posterSvg(e, dateLabel);
+    const event = new Event({
       title: e.title, description: e.description, date, time: e.time, venue: e.venue,
       capacity: e.capacity, registeredCount: e.fill,
-      poster: `/uploads/${file}`, createdBy: admin._id,
+      posterData: Buffer.from(svg), posterType: 'image/svg+xml',
+      createdBy: admin._id,
     });
-
+    event.poster = `/api/events/${event._id}/poster`;
+    await event.save();
     const regs = [];
     for (let j = 0; j < e.fill; j++) {
       const attended = j < (e.attended || 0);
