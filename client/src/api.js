@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-export const API_URL = 'http://localhost:5000';   // used for poster image links
+// On your laptop this falls back to localhost.
+// On Render we set VITE_API_URL to the live backend address.
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const api = axios.create({ baseURL: API_URL + '/api' });
 

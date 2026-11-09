@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors());                          // allow the React app to call us
 app.use(express.json());                  // parse JSON request bodies
-app.use('/uploads', express.static('uploads'));   // serve poster images
+   
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
